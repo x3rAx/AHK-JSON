@@ -26,7 +26,8 @@ class JSON {
             Object  - The resulting object
     */
     parse(jsonString) {
-
+        ret := Object()
+        return ret
     }
 
 }
