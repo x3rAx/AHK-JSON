@@ -15,4 +15,18 @@ class JSON {
         throw "Class JSON cannot be initialized"
     }
 
+    /*!
+        Function: parse(jsonString)
+            Parses a JSON string to an object.
+
+        Parameters:
+            jsonString  - The JSON string to parse
+
+        Returns:
+            Object  - The resulting object
+    */
+    parse(jsonString) {
+
+    }
+
 }
