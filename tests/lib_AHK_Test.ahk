@@ -1,30 +1,4 @@
-﻿#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
-; #Warn  ; Enable warnings to assist with detecting common errors.
-SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
-SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
-
-#Include ../lib_JSON.ahk
-
-success := 0
-
-assertEquals(actual, expected) {
-    if (actual == expected) {
-        return true
-    } else {
-        ; let exception bubble to top
-        try {
-            fail()
-        }
-        catch e {
-            Throw e
-        }
-    }
-}
-
-fail() {
-    global Test
-    Throw "Test failed: " test
-}
+﻿#Include ../lib_JSON.ahk
 
 
 ; ===== Tests ===============
@@ -36,7 +10,7 @@ fail() {
             JSON.__New()
             fail()
         } catch e {
-            assertEquals(e, "Class JSON cannot be initialized")
+            assertEquals("Class JSON cannot be initialized", e)
         }
     } catch e {
         Throw e
@@ -48,23 +22,19 @@ fail() {
     try {
         jsonString := "{}"
         result := JSON.parse(jsonString)
-        assertEquals(isObject(result), isObject(Object()))
+        assertEquals(false, isObject(result))
     } catch e {
-        Throw e 
+        Throw e
     }
 } success++
 
 
-; --- Test Result
-MsgBox %success% Tests successful! :)
-ExitApp
-
-
-; --- Template ---------
-{ Test := ""
+{ Test := "Parse most simple json array"
     try {
-
+        jsonString := "[]"
+        result := JSON.parse(jsonString)
+        assertEquals(true, isObject(result))
     } catch e {
-        Throw e
+        Throw e 
     }
 } success++
