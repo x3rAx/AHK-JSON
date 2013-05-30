@@ -13,9 +13,5 @@ return
 
 ; --- Template ---------
 { Test := ""
-    try {
-        ; Testcode here
-    } catch e {
-        Throw e
-    }
+    ; Testcode here
 } success++

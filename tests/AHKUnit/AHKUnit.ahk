@@ -14,7 +14,8 @@ assertEquals(expected, actual) {
 fail() {
     global Test
 
-    Throw "Test failed: " test
+    MsgBox Test failed:`n    %Test%
+    ExitApp
 }
 
 testResults() {
@@ -30,9 +31,5 @@ success := 0
 
 ; --- Template ---------
 ;{ Test := ""
-;    try {
-;        ; Testcode here
-;    } catch e {
-;        Throw e
-;    }
+;    ; Testcode here
 ;} success++
