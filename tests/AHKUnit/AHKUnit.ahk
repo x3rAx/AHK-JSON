@@ -3,29 +3,7 @@
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
-assertEquals(expected, actual) {
-    if (expected == actual) {
-        return true
-    } else {
-        fail()
-    }
-}
-
-assertTrue(actual) {
-    if (actual == true) {
-        return true
-    } else {
-        fail()
-    }
-}
-
-assertFalse(actual) {
-    if (actual == false) {
-        return true
-    } else {
-        fail()
-    }
-}
+#Include ./AHKUnit/_assertions.ahk
 
 fail() {
     global Test
