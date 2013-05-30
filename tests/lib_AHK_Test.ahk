@@ -17,12 +17,19 @@
 { Test := "Parse most simple json object"
     jsonString := "{}"
     result := JSON.parse(jsonString)
-    assertEquals(true, isObject(result))
+    assertTrue(isObject(result))
 } success++
 
 
 { Test := "Parse most simple json array"
     jsonString := "[]"
     result := JSON.parse(jsonString)
-    assertEquals(true, isObject(result))
+    assertTrue(isObject(result))
+} success++
+
+
+{ Test := "Parse simple array"
+    jsonString := "[""elem1""]"
+    result := JSON.parse(jsonString)
+    assertEquals("elem1", result[1])
 } success++

@@ -11,6 +11,22 @@ assertEquals(expected, actual) {
     }
 }
 
+assertTrue(actual) {
+    if (actual == true) {
+        return true
+    } else {
+        fail()
+    }
+}
+
+assertFalse(actual) {
+    if (actual == false) {
+        return true
+    } else {
+        fail()
+    }
+}
+
 fail() {
     global Test
 
