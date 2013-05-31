@@ -23,6 +23,8 @@ testResults() {
 success := 0
 
 
+TrayTip Running tests, . . ., 30, 1
+
 ; --- Template ---------
 ;{ Test := ""
 ;    ; Testcode here
