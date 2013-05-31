@@ -28,7 +28,7 @@
 } success++
 
 
-{ Test := "Parse simple array"
+{ Test := "Parse json array with one string elem"
     jsonString := "[""elem1""]"
     result := JSON.parse(jsonString)
     assertEquals("elem1", result[1])

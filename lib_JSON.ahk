@@ -27,6 +27,14 @@ class JSON {
     */
     parse(jsonString) {
         ret := Object()
+        len := StrLen(jsonString)
+
+        array_regex := "\[""(.*?)""\]"
+
+        if (RegExMatch(jsonString, "Si)" . array_regex, match_)) {
+            ret.Insert(match_1)
+        }
+        
         return ret
     }
 
