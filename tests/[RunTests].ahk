@@ -1,4 +1,4 @@
-#Include ./AHKUnit/AHKUnit.ahk
+#Include ./[AHKUnit]/AHKUnit.ahk
 
 
 
