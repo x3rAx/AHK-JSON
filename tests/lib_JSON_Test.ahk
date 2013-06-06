@@ -9,27 +9,31 @@
         JSON.__New()
         fail()
     } catch e {
-        assertEquals("Class JSON cannot be initialized", e)
+        expected := "Class JSON cannot be initialized"
+        assertEquals(expected, e)
     }
 } success++
 
 
 { Test := "Parse most simple json object"
     jsonString := "{}"
+    expected := Object()
     result := JSON.parse(jsonString)
-    assertTrue(isObject(result))
+    assertEquals(expected, result)
 } success++
 
 
 { Test := "Parse most simple json array"
     jsonString := "[]"
+    expected := Array()
     result := JSON.parse(jsonString)
-    assertTrue(isObject(result))
+    assertEquals(expected, result)
 } success++
 
 
 { Test := "Parse json array with one string elem"
     jsonString := "[""elem1""]"
+    expected := Array("elem1")
     result := JSON.parse(jsonString)
-    assertEquals("elem1", result[1])
+    assertEquals(expected, result)
 } success++

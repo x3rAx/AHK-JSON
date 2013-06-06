@@ -3,7 +3,7 @@
 
 
 ; ===== Tests ===============
-#Include ./lib_AHK_Test.ahk
+#Include ./lib_JSON_Test.ahk
 
 
 
