@@ -3,7 +3,9 @@
 
 
 ; ===== Tests ===============
-#Include ./lib_JSON_Test.ahk
+#Include ./lib_JSON_Test-__New().ahk
+#Include ./lib_JSON_Test-parse().ahk
+#Include ./lib_JSON_Test-_error().ahk
 
 
 

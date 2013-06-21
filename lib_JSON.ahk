@@ -57,11 +57,39 @@ class JSON {
             }
 
             if (pos == posBefore) {
-                return false
+                char := SubStr(jsonString, pos, 1)
+                this._error("Unexpected token '" . char . "'", jsonString, pos)
             }
         }
         
         return ret
+    }
+
+    /*
+        Function: _error(msg [, jsonString, pos])
+            Generate exception base on message, json string and position
+
+        Parameters:
+            msg         - The error message to display
+            jsonString  - (optional) The JSON string. This must be passed along
+                            with `pos` to have an effect.
+            pos         - (optional) The position where the error occured. This
+                            must be passed along with `jsonString` to have an
+                            effect.
+
+        Throws:
+            Exception message
+    */
+    _error(msg, jsonString="", pos="") {
+        if (jsonString != "" && pos != "") {
+            start    := pos -5
+            length   := 15
+            msg .= "`n`n"
+            msg .= "Position: " . pos . "`n"
+            msg .= "Near: '" . SubStr(jsonString, start, length) . "'"
+        }
+
+        throw msg
     }
 
 }

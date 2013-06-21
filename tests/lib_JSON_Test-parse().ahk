@@ -3,18 +3,6 @@
 
 ; ===== Tests ===============
 
-{ Test := "Clas JSON cannot be initialized"
-    try {
-        ; call constructor
-        JSON.__New()
-        fail()
-    } catch e {
-        expected := "Class JSON cannot be initialized"
-        assertEquals(expected, e)
-    }
-} success++
-
-
 { Test := "Parse most simple json object"
     jsonString := "{}"
     expected := Object()
@@ -44,4 +32,16 @@
     result := JSON.parse(jsonString)
     expected := Array("elem1", "elem2", "elem3")
     assertEquals(expected, result)
+} success++
+
+{ Test := "Parser throws exception on unexpected token"
+    try {
+        jsonString := "[-]"
+        JSON.parse(jsonString)
+        fail("No exception thrown.")
+    } catch e {
+        expected := "Unexpected token '-'"
+        actual   := SubStr(e, 1, StrLen(expected))
+        assertEquals(expected, actual)
+    }
 } success++
