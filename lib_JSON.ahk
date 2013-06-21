@@ -28,11 +28,37 @@ class JSON {
     parse(jsonString) {
         ret := Object()
         len := StrLen(jsonString)
+        pos := 1
 
-        array_regex := "\[""(.*?)""\]"
+        regexps := Array(""
+            . "(\{)"
+            , "(\})"
+            , "(\[)"
+            , "(\])"
+            , """(.*?)"""
+            , "(,)"
+        . "")
 
-        if (RegExMatch(jsonString, "Si)" . array_regex, match_)) {
-            ret.Insert(match_1)
+        while (pos <= len) {
+            posBefore := pos
+
+            for key,regexp in regexps {
+                RegExMatch(jsonString, "OSi)(" . regexp . ")", match, pos)
+
+                if (match.Pos(1) == pos) {
+                    if (RegExMatch(match.Value(1), "OSi)""(.*?)""", strMatch)) {
+                        ret.insert(strMatch.Value(1))
+                    }
+
+                    pos += match.Len(1)
+
+                    continue
+                }
+            }
+
+            if (pos == posBefore) {
+                return false
+            }
         }
         
         return ret

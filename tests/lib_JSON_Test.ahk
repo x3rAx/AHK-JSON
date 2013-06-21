@@ -37,3 +37,11 @@
     result := JSON.parse(jsonString)
     assertEquals(expected, result)
 } success++
+
+
+{ Test := "Parse json array with multiple strings"
+    jsonString := "[""elem1"",""elem2"",""elem3""]"
+    result := JSON.parse(jsonString)
+    expected := Array("elem1", "elem2", "elem3")
+    assertEquals(expected, result)
+} success++
