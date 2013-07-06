@@ -34,13 +34,27 @@
     assertEquals(expected, result)
 } success++
 
+
 { Test := "Parser throws exception on unexpected token"
     try {
         jsonString := "[-]"
         JSON.parse(jsonString)
         fail("No exception thrown.")
     } catch e {
-        expected := "Unexpected token '-'"
+        expected := "SyntaxError: Unexpected token '-'"
+        actual   := SubStr(e, 1, StrLen(expected))
+        assertEquals(expected, actual)
+    }
+} success++
+
+
+{ Test := "Parser throws exception on unexpected token at end of string"
+    try {
+        jsonString := "[]-"
+        JSON.parse(jsonString)
+        fail("No exception thrown.")
+    } catch e {
+        expected := "SyntaxError: Unexpected token '-'"
         actual   := SubStr(e, 1, StrLen(expected))
         assertEquals(expected, actual)
     }
