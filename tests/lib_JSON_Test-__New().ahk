@@ -3,7 +3,7 @@
 
 ; ===== Tests ===============
 
-{ Test := "Clas JSON cannot be initialized"
+{ Test := "Class JSON cannot be initialized"
     try {
         ; call constructor
         JSON.__New()

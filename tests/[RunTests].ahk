@@ -9,6 +9,9 @@ try {
     #Include ./lib_JSON_Test-parse().ahk
 
 } catch e {
+    if (IsObject(e)) {
+        throw e
+    }
     MsgBox Exception at test '%Test%'`nwith message:`n`n%e%
     ExitApp
 }

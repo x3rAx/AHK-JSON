@@ -27,8 +27,14 @@ class JSON {
             "\[(S,)*?$"  : "S"       ; In array, after a comma
         )}
 
+    static _reduceRules := [
+        (LTrim Join Comments
+            { regex : "(\{\})",          sub : "O", fnc : "_reduce_object" },
+            { regex : "(\[((S,)*S)*\])", sub : "A", fnc : "_reduce_array"  }
+        )]
+
     /*
-        Function: __NEew()
+        Function: __New()
             (Constructor) Prevents the class from being initialized by throwing an error
 
         Throws:
@@ -53,43 +59,61 @@ class JSON {
             Exception on unexcepted token
     */
     parse(jsonString) {
-        ret := Object()
-        len := StrLen(jsonString)
-        pos := 1
+        ret         := Object()
+        len         := StrLen(jsonString)
+        pos         := 1
+        symbolStack := ""
 
         while (pos <= len) {
-            allowedTokens := this._getNextAllowedTokens(symbolStack)
+            this._next(jsonString, ret, pos, symbolStack)
+            this._reduce(ret, symbolStack)
+        }
 
-            match := false
+        return ret[""]
+    }
 
-            Loop parse, allowedTokens
-            {
-                symbol := A_LoopField
-                regex  := this._regexps[symbol]
+    /*
+        Function: _next(jsonString, ret, ByRef pos, ByRef symbolStack)
+            Find next token and add it to the symbol stack
 
-                RegExMatch(jsonString, "OSi)(" . regex . ")", match, pos)
+        Parameters:
+            jsonString  - The JSON string
+            ret         - The return object
+            pos         - (ByRef) The current position
+            symbolStack - (ByRef) The symbol stack
 
-                if (match.Pos(1) == pos) {
-                    if (RegExMatch(match.Value(1), "OSi)""(.*?)""", strMatch)) {
-                        ret.insert(strMatch.Value(1))
-                    }
+        Throws:
+            Exception on unexcepted token
+    */
+    _next(jsonString, ret, ByRef pos, ByRef symbolStack) {
+        allowedTokens := this._getNextAllowedTokens(symbolStack)
 
-                    symbolStack .= symbol
-                    pos += match.Len(1)
+        match := false
 
-                    break
-                } else {
-                    match := false
-                }
-            }
+        Loop parse, allowedTokens
+        {
+            symbol := A_LoopField
+            regex  := this._regexps[symbol]
 
-            if (!match) {
-                char := SubStr(jsonString, pos, 1)
-                this._error("SyntaxError: Unexpected token '" . char . "'", jsonString, pos)
+            ; Match 1 is the whole token, match 2 is without quotes
+            RegExMatch(jsonString, "OSi)(" . regex . ")", match, pos)
+
+            if (match.Pos(1) == pos) {
+                ret.insert(match.Value(2))
+
+                symbolStack .= symbol
+                pos += match.Len(1)
+
+                break
+            } else {
+                match := false
             }
         }
-        
-        return ret
+
+        if (!match) {
+            char := SubStr(jsonString, pos, 1)
+            this._error("SyntaxError: Unexpected token '" . char . "'", jsonString, pos)
+        }
     }
 
     /*
@@ -109,6 +133,70 @@ class JSON {
                 return tokens
             }
         }
+    }
+
+    _reduce(ret, ByRef symbolStack) {
+        for key,rule in this._reduceRules {
+            regex     := rule["regex"]
+            sub       := rule["sub"]
+            reduceFnc := rule["fnc"]
+            children  := Object()
+
+            if (RegExMatch(symbolStack, "OSi)(" . regex . ")$", match)) {
+                ; Replace matching symbols with %sub%
+                symbolStack := RegExReplace(symbolStack, "Si)(" . regex . ")$", sub)
+
+                ; Extract tokens from return stack
+                Loop % match.Len(1) {
+                    children.insert(ret[ret.MaxIndex()])
+                    ret.Remove()
+                }
+
+                ; Reverse array to get original order
+                children := this._reverseArray(children)
+
+                ; Get new token
+                newToken := this[reduceFnc](children)
+
+                if (newToken != "") {
+                    ; By using MaxIndex we will get an empty index ("") in the end
+                    ret[ret.MaxIndex()+1] := newToken
+                }
+
+                break
+            }
+        }
+    }
+
+    _reduce_object(children) {
+        ret := Object()
+        return ret
+    }
+
+    _reduce_array(children) {
+        ret := Array()
+
+        if (children.MaxIndex() > 2) {
+            for key,value in children {
+                if (mod(key, 2) == 0) {
+                    ret.insert(value)
+                }
+            }
+        }
+
+        return ret
+    }
+
+    _reverseArray(arr) {
+        ret      := Array()
+        newIndex := arr.MaxIndex()
+
+        for key,value in arr {
+            ret[newIndex] := value
+            newIndex--
+        }
+
+        return ret
     }
 
     /*

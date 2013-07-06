@@ -33,4 +33,3 @@
     expected := "S"
     assertEquals(expected, result)
 } success++
-
